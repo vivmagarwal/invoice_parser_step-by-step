@@ -1,0 +1,191 @@
+teaching_context:
+  project_name: "Invoice Parser AI"
+  project_type: "Full Stack Web Application"
+  complexity_level: "Advanced"
+
+  technology_stack:
+    backend:
+      framework: "FastAPI"
+      version: "0.115.14"
+      language: "Python 3.11+"
+      ai_integration: "Google Gemini 2.0 Flash via LangChain"
+      database: "PostgreSQL on Neon"
+      orm: "SQLAlchemy 2.0.41"
+      authentication: "JWT with python-jose"
+
+    frontend:
+      framework: "React 19.1.1"
+      build_tool: "Vite 7.1.2"
+      styling: "Tailwind CSS 3.4.17"
+      state_management: "Context API"
+      routing: "React Router"
+
+    infrastructure:
+      server: "Uvicorn ASGI"
+      file_storage: "Local filesystem"
+      monitoring: "Custom logging"
+
+  core_features:
+    - "AI-powered invoice data extraction"
+    - "User authentication and authorization"
+    - "File upload and processing"
+    - "Database CRUD operations"
+    - "Real-time processing feedback"
+    - "Dashboard with statistics"
+    - "Dark/light theme support"
+    - "Indian GST compliance"
+
+  architecture_patterns:
+    backend:
+      - "Clean Architecture with service layer"
+      - "Repository pattern for database"
+      - "Dependency injection"
+      - "Async/await throughout"
+      - "Pydantic for validation"
+
+    frontend:
+      - "Component-based architecture"
+      - "Protected routes pattern"
+      - "Context for global state"
+      - "Custom hooks for logic"
+      - "Error boundaries"
+
+  database_schema:
+    tables:
+      - users: "Authentication and profiles"
+      - companies: "Vendor/customer records"
+      - addresses: "Location information"
+      - invoices: "Main invoice records"
+      - line_items: "Individual invoice items"
+      - tax_calculations: "GST tax breakdowns"
+
+    relationships:
+      - "User -> Many Invoices"
+      - "Invoice -> One Company (vendor)"
+      - "Invoice -> One Company (customer)"
+      - "Company -> Many Addresses"
+      - "Invoice -> Many Line Items"
+      - "Invoice -> One Tax Calculation"
+
+  api_structure:
+    authentication:
+      - "POST /auth/register"
+      - "POST /auth/login"
+      - "GET /auth/me"
+
+    invoice_processing:
+      - "POST /parse-invoice"
+      - "POST /save-invoice"
+      - "POST /process-and-save"
+      - "GET /invoices/{id}"
+
+    dashboard:
+      - "GET /dashboard/stats"
+      - "GET /dashboard/invoices"
+      - "DELETE /dashboard/invoices/{id}"
+
+  learning_prerequisites:
+    essential:
+      - "Basic Python programming"
+      - "Basic JavaScript/HTML/CSS"
+      - "Understanding of HTTP/REST"
+      - "Basic SQL concepts"
+
+    helpful_but_not_required:
+      - "React basics"
+      - "Async programming"
+      - "ORM concepts"
+      - "JWT authentication"
+
+  complexity_breakdown:
+    beginner_friendly:
+      - "Basic FastAPI routes"
+      - "Simple React components"
+      - "Tailwind utilities"
+      - "File handling"
+
+    intermediate:
+      - "Database operations"
+      - "Authentication flow"
+      - "State management"
+      - "Form validation"
+
+    advanced:
+      - "AI integration"
+      - "Async patterns"
+      - "Performance optimization"
+      - "Error recovery"
+
+  key_challenges_for_learners:
+    - "Understanding async/await patterns"
+    - "Managing frontend-backend communication"
+    - "Database relationships and queries"
+    - "Authentication flow complexity"
+    - "AI API integration and error handling"
+    - "File upload security and validation"
+
+  teaching_approach:
+    philosophy: "Build incrementally, test continuously"
+
+    progression:
+      - "Start with static content"
+      - "Add basic interactivity"
+      - "Introduce backend API"
+      - "Connect to database"
+      - "Implement authentication"
+      - "Add file uploads"
+      - "Integrate AI processing"
+      - "Polish UI/UX"
+      - "Add monitoring"
+      - "Deploy to production"
+
+    testing_strategy:
+      - "Manual testing after each step"
+      - "Automated tests with Playwright MCP"
+      - "API testing with FastAPI TestClient"
+      - "Component testing with React Testing Library"
+
+  discovered_quirks:
+    - "Neon connection requires pooling configuration"
+    - "Gemini API needs proper async handling"
+    - "File uploads require user-isolated directories"
+    - "JWT tokens need proper expiration handling"
+    - "Dark mode requires manual class toggle"
+    - "SQLAlchemy async requires careful session management"
+
+  environment_setup:
+    backend_requirements:
+      - "Python 3.11+"
+      - "PostgreSQL database (Neon account)"
+      - "Google Gemini API key"
+      - "UV package manager (recommended)"
+
+    frontend_requirements:
+      - "Node.js 18+"
+      - "npm or yarn"
+      - "Modern browser for testing"
+
+    development_tools:
+      - "VS Code with Python/React extensions"
+      - "Postman or similar for API testing"
+      - "Database viewer (pgAdmin, TablePlus)"
+
+  estimated_learning_time:
+    beginner: "8-10 weeks"
+    intermediate: "4-6 weeks"
+    experienced: "2-3 weeks"
+
+  project_value_proposition:
+    real_world_skills:
+      - "Modern full-stack development"
+      - "AI API integration"
+      - "Production-ready patterns"
+      - "Security best practices"
+      - "Performance optimization"
+
+    portfolio_worthy:
+      - "Demonstrates AI integration"
+      - "Shows full-stack capabilities"
+      - "Includes authentication"
+      - "Has polished UI/UX"
+      - "Solves real business problem"

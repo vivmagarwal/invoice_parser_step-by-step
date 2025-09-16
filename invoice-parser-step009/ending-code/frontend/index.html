@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="description" content="AI-powered invoice processing and management application" />
+    <meta name="keywords" content="invoice, processing, AI, business, finance, automation" />
+    <meta name="author" content="Invoice Parser Team" />
+    
+    <!-- Theme and Display -->
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="msapplication-TileColor" content="#4f46e5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Invoice Parser" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Icons and Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- <link rel="manifest" href="/manifest.json" /> --> <!-- Temporarily disabled to fix PWA popup -->
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/src/main.jsx" as="script" />
+    <link rel="preload" href="/src/index.css" as="style" />
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//localhost:8000" />
+    
+    <title>Invoice Parser - AI-Powered Invoice Processing</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- PWA Install Banner - Temporarily disabled -->
+    <!--
+    <div id="pwa-install-banner" class="hidden fixed bottom-4 left-4 right-4 bg-indigo-600 text-white p-4 rounded-lg shadow-lg z-50">
+      <div class="flex items-center justify-between">
+        <div>
+          <h4 class="font-medium">Install Invoice Parser</h4>
+          <p class="text-sm opacity-90">Get the full app experience</p>
+        </div>
+        <div class="flex space-x-2">
+          <button id="pwa-install-btn" class="bg-white text-indigo-600 px-3 py-1 rounded text-sm font-medium">
+            Install
+          </button>
+          <button id="pwa-dismiss-btn" class="text-white opacity-75 hover:opacity-100">
+            ×
+          </button>
+        </div>
+      </div>
+    </div>
+    -->
+    
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- PWA Installation Script - Temporarily disabled to fix installation popup -->
+    <!--
+    <script>
+      // PWA Installation
+      let deferredPrompt;
+      
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install banner
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) {
+          banner.classList.remove('hidden');
+        }
+      });
+      
+      document.getElementById('pwa-install-btn')?.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log(`PWA install outcome: ${outcome}`);
+          deferredPrompt = null;
+          
+          // Hide banner
+          const banner = document.getElementById('pwa-install-banner');
+          if (banner) {
+            banner.classList.add('hidden');
+          }
+        }
+      });
+      
+      document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) {
+          banner.classList.add('hidden');
+        }
+      });
+      
+      // Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+              
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New content available
+                    if (confirm('New version available! Reload to update?')) {
+                      window.location.reload();
+                    }
+                  }
+                });
+              });
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+      
+      // Handle offline/online status
+      window.addEventListener('online', () => {
+        console.log('App is online');
+        // Trigger background sync if available
+        if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+          navigator.serviceWorker.ready.then((registration) => {
+            return registration.sync.register('background-sync');
+          });
+        }
+      });
+      
+      window.addEventListener('offline', () => {
+        console.log('App is offline');
+      });
+    </script>
+    -->
+  </body>
+</html>

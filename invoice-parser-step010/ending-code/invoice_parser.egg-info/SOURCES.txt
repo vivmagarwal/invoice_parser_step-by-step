@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+./app/__init__.py
+./app/main.py
+invoice_parser.egg-info/PKG-INFO
+invoice_parser.egg-info/SOURCES.txt
+invoice_parser.egg-info/dependency_links.txt
+invoice_parser.egg-info/requires.txt
+invoice_parser.egg-info/top_level.txt
