@@ -1,5 +1,45 @@
 # CLAUDE.md
 
+## Context Management Protocol
+
+### When to Clear Context
+**MANDATORY**: Clear context with `/clear` after completing each of these:
+- Teaching plan step completion
+- Major feature implementation
+- Engineering plan task completion
+- Test suite execution
+- Large file analysis tasks
+
+### Context Clearing Workflow
+```
+Task Complete → Update Docs → Commit → `/clear` → Load Next Task
+```
+
+### What Stays in CLAUDE.md (Persistent Context)
+This file persists across all sessions and should contain:
+- Critical architectural decisions
+- Project-specific conventions
+- Common issue resolutions
+- Testing protocols
+- Update frequency rules
+- Backend-first development approach
+- File change tracking requirements
+- Context management protocol
+
+### Living Documents Structure
+These documents must be continuously updated:
+1. **TEACHING-PLAN.md**: Current step progress, all 10 steps defined upfront
+2. **FILES_CHANGED.yaml**: Complete history of all file modifications
+3. **Engineering Plan**: Task status, implementation notes, discoveries
+4. **TEST_REPORT.md**: Test results, issues, and resolutions
+
+### Context Loading Priority
+After `/clear`, load in this order:
+1. CLAUDE.md (always)
+2. Current plan document (TEACHING-PLAN.md or engineering plan)
+3. FILES_CHANGED.yaml (if exists)
+4. Current step/task specific files only
+
 ## Teaching Plan Step Structure
 
 When implementing teaching plan steps, ALWAYS follow this structure:
@@ -12,11 +52,21 @@ invoice-parser-stepXXX/
 └── teacher-notes.md    # Teaching guidance and common issues
 ```
 
+### Backend-First Development (CRITICAL for Fullstack)
+For fullstack projects, ALWAYS:
+1. Complete entire backend API (steps 1-5) FIRST
+2. Test all endpoints as external world would (curl/httpie)
+3. Verify database operations independently
+4. Ensure authentication/authorization working
+5. Only then move to frontend (steps 6-10)
+
 ### Critical Rules for Step Implementation
-1. **Step Progression**: The `ending-code` of step N MUST become the `starting-code` of step N+1
-2. **First Step**: Step 001's `starting-code` directory should be empty (starting from scratch)
-3. **Continuity**: Each step must build upon the previous step's work - no gaps allowed
-4. **Documentation**: Teacher notes are mandatory and must include common issues and solutions
+1. **All Steps Upfront**: TEACHING-PLAN.md must define ALL 10 steps from the beginning
+2. **Step Progression**: The `ending-code` of step N MUST become the `starting-code` of step N+1
+3. **First Step**: Step 001's `starting-code` directory should be empty (starting from scratch)
+4. **Continuity**: Each step must build upon the previous step's work - no gaps allowed
+5. **Documentation**: Teacher notes are mandatory and must include common issues and solutions
+6. **File Tracking**: Document EVERY file change in FILES_CHANGED.yaml
 
 ### Required Components in Each Step
 - Clear learning objectives in teacher-notes.md
@@ -105,5 +155,67 @@ When testing full-stack applications:
 - [ ] Performance metrics acceptable
 - [ ] Security considerations noted
 - [ ] No mocks. No dummies. No pathy-fixes. Only fully working code.
- 
-Remember: A new developer should be able to continue work using ONLY the codebase and engineering plan.
+
+## File Change Documentation Protocol
+
+After EVERY file modification, update FILES_CHANGED.yaml:
+```yaml
+# FILES_CHANGED.yaml
+step_XXX:
+  created:
+    - path/to/file: "Description of what this file does"
+  modified:
+    - path/to/file: "What was changed and why"
+  deleted:
+    - path/to/file: "Why this was removed"
+```
+
+## API Testing Commands Reference
+
+### Backend Steps (1-5) - Test with curl/httpie
+```bash
+# Step 1: Health Check
+curl http://localhost:8000/health
+
+# Step 3: CRUD Operations
+curl -X POST http://localhost:8000/api/items \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Test Item"}'
+
+# Step 4: Authentication
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "password": "secure123"}'
+```
+
+### Frontend Steps (6-10) - Test with Playwright MCP
+```javascript
+await browser_navigate({ url: "http://localhost:3000" });
+await browser_snapshot();
+await browser_wait_for({ text: "Expected Text" });
+```
+
+## Command Quick Reference
+
+### Context Management
+- `/clear` - Complete context reset (use after each task/step)
+- `/compact` - Reduce history while keeping key context
+
+### Git Workflow for Steps
+```bash
+git add .
+git commit -m "STEP-XXX: Description"
+git push origin step-XXX
+```
+
+## Critical Reminders
+
+1. **ALWAYS** show all 10 steps upfront in TEACHING-PLAN.md
+2. **ALWAYS** complete backend before frontend
+3. **ALWAYS** document file changes immediately
+4. **ALWAYS** clear context after major tasks
+5. **NEVER** skip testing at appropriate layer
+6. **NEVER** leave documentation gaps
+7. **NEVER** create unnecessary files
+
+Remember: A new developer should be able to continue work using ONLY the codebase and plan documents.

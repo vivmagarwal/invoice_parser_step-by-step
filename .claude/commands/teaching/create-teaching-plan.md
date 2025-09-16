@@ -1,19 +1,36 @@
 ---
 name: create-teaching-plan
-description: Transform project into 10-step teaching journey for beginners
+description: Transform project into 10-step teaching journey for beginners with backend-first approach
 argument-hint: [project-path or leave blank for current project]
 ---
 
-<task>Generate complete progressive teaching plan for project</task>
+<task>Generate complete progressive teaching plan with backend-first approach for fullstack projects</task>
 
 <objective>
 Transform complex codebase into step-by-step learning experience that:
 - Rebuilds project through 10 incremental, testable steps
+- Completes and tests entire backend API first (steps 1-5) for fullstack projects
 - Teaches absolute beginners with no framework knowledge
 - Tracks progress via YAML status (living document)
-- Provides complete context (codebase + plan = everything needed)
+- Clears context after each step for focused execution
+- Documents file changes for next-step context
 - Works after EVERY step (no broken states)
 </objective>
+
+<context-management-protocol>
+CRITICAL: After completing each step/task:
+1. Update all documentation with file changes
+2. Mark task as complete in YAML status
+3. Save all work and commit if needed
+4. Tell user to execute: `/clear` command
+5. New session loads: CLAUDE.md + TEACHING-PLAN.md + current step context
+6. Continue with fresh context window
+
+Best practices for context clearing:
+- Use `/clear` for complete context reset
+- Use `/compact` for reducing history while keeping key context
+- Always document critical discoveries before clearing
+</context-management-protocol>
 
 <agent-architecture>
 This command leverages specialized agents:
@@ -28,7 +45,7 @@ These agents operate with independent context windows for optimal performance.
     Task(
       subagent_type="code-researcher",
       description="Comprehensive codebase analysis",
-      prompt="Analyze entire codebase: file structure, dependencies, architecture patterns, data flows, API endpoints, component relationships. Extract ALL features and functionality. Miss nothing."
+      prompt="Analyze entire codebase: Identify if fullstack, backend-only, or frontend-only. Document all API endpoints, data models, services, frontend components. Extract dependencies, architecture patterns, data flows. Determine optimal teaching progression. Miss nothing."
     )
 
     Document in .claude-project-management/TEACHING-CONTEXT.yaml
@@ -39,32 +56,31 @@ These agents operate with independent context windows for optimal performance.
     Task(
       subagent_type="web-researcher",
       description="Research frameworks and patterns",
-      prompt="Research official documentation for all identified technologies. Find current best practices, common patterns, and beginner-friendly explanations. Focus on official sources from last 12 months."
+      prompt="Research official documentation for all identified technologies. Find current best practices, API testing methods, common patterns. Focus on backend-first development approach for fullstack apps."
     )
   </phase_2_research>
 
   <phase_3_verification>
     CODE EXECUTION AND LIVE TESTING:
     - Set up development environment
-    - Run application end-to-end
-    - Use Playwright MCP to test all features:
-      • browser_navigate to localhost
-      • browser_snapshot for current state
-      • browser_click for interactions
-      • browser_wait_for to verify elements
+    - For fullstack: Test backend API endpoints first using curl/httpie
+    - Verify all backend functionality independently
+    - Only then test frontend integration
+    - Use Playwright MCP for frontend testing
     - Document setup quirks
   </phase_3_verification>
 
   <phase_4_plan_generation>
     Generate: .claude-project-management/TEACHING-PLAN.md
+    WITH ALL 10 STEPS DEFINED UPFRONT
   </phase_4_plan_generation>
 
   <phase_5_testing>
-    PLAYWRIGHT MCP TESTING FRAMEWORK:
-    - Create test suite for each step
-    - Execute tests using Playwright MCP server
-    - Capture screenshots for documentation
-    - Verify functionality in real browser
+    BACKEND-FIRST TESTING:
+    - Create API test suite for backend steps
+    - Use curl/httpie/pytest for API testing
+    - Playwright MCP only for frontend steps
+    - Verify functionality at each layer
   </phase_5_testing>
 
   <phase_6_documentation>
@@ -72,15 +88,44 @@ These agents operate with independent context windows for optimal performance.
   </phase_6_documentation>
 </workflow>
 
+<fullstack-teaching-progression>
+For fullstack projects, ALWAYS follow this progression:
+
+## Backend Phase (Steps 1-5)
+Step 1: Project Setup & Basic API Structure
+Step 2: Database Models & Migrations
+Step 3: Core API Endpoints (CRUD)
+Step 4: Authentication & Authorization
+Step 5: Advanced Features & External Integrations
+
+## Frontend Phase (Steps 6-10)
+Step 6: Frontend Setup & First Page
+Step 7: API Integration & State Management
+Step 8: Core UI Components
+Step 9: Advanced Features & UX
+Step 10: Testing & Optimization
+
+For backend-only or frontend-only projects, adapt accordingly.
+</fullstack-teaching-progression>
+
 <teaching-plan-structure>
 
 # Project Teaching Plan
 
+## Context Management Protocol
+**CRITICAL: Follow this protocol after EVERY step completion:**
+1. Update FILES_CHANGED.yaml with all modifications
+2. Update TEACHING-PLAN.md with completion status
+3. Document critical discoveries in implementation_notes
+4. Instruct user to execute `/clear` command
+5. Next session loads: CLAUDE.md + TEACHING-PLAN.md + next step context
+
 ## Usage Instructions
-1. Read this plan at every session start
-2. Update YAML status after EACH step completion
-3. Document all discoveries inline
-4. This document + codebase = complete learning resource
+1. Read TEACHING-PLAN.md at every session start
+2. Check FILES_CHANGED.yaml for recent modifications
+3. Update YAML status after EACH step completion
+4. Clear context with `/clear` after each step
+5. This document + codebase = complete learning resource
 
 ## Target Audience
 - Absolute beginners with basic programming knowledge
@@ -88,10 +133,27 @@ These agents operate with independent context windows for optimal performance.
 - Learning by building, not just reading
 
 ## Teaching Philosophy
+- Backend-first for fullstack projects (complete API before UI)
 - One concept per step
 - Working application after every step
-- Test everything before proceeding
+- Test at the layer of interaction (API tests for backend, UI tests for frontend)
 - Document the "why" not just "how"
+
+## All Teaching Steps (Complete Overview)
+
+### Backend Phase
+- **Step 1**: Project Setup & Basic API Structure
+- **Step 2**: Database Models & Migrations
+- **Step 3**: Core API Endpoints (CRUD)
+- **Step 4**: Authentication & Authorization
+- **Step 5**: Advanced Features & External Integrations
+
+### Frontend Phase
+- **Step 6**: Frontend Setup & First Page
+- **Step 7**: API Integration & State Management
+- **Step 8**: Core UI Components
+- **Step 9**: Advanced Features & UX
+- **Step 10**: Testing & Optimization
 
 ## Progress Tracking
 
@@ -100,43 +162,54 @@ teaching_progress:
   current_step: 1
   total_steps: 10
   last_updated: ""
+  context_cleared_count: 0
 
 steps:
   - step_id: "STEP-001"
-    title: "Project Setup & First Output"
-    description: "Create project structure and display 'Hello World'"
+    title: "Project Setup & Basic API Structure"
+    phase: "backend"
+    description: "Create project structure and basic API with health check"
 
     pre_implementation:
       previous_step_complete: true
       environment_ready: false
       concepts_explained: false
-      starter_code_provided: false
+      context_loaded: false
 
     learning_objectives:
       - objective: "Understand project structure"
         achieved: false
       - objective: "Set up development environment"
         achieved: false
-      - objective: "Run first application"
+      - objective: "Create basic API endpoint"
         achieved: false
 
     implementation_checklist:
       files_created: false
       dependencies_installed: false
       code_written: false
-      manually_tested: false
-      playwright_tested: false
+      api_tested: false
+      documentation_updated: false
+
+    files_changed:
+      created: []
+      modified: []
+      deleted: []
 
     post_implementation:
       app_working: false
       tests_passing: false
       concepts_understood: false
       ready_for_next: false
+      context_cleared: false
 
     implementation_status: "not_started"
 
     implementation_notes: |
       [Critical discoveries and context for next session]
+
+    api_test_commands: |
+      [Exact curl/httpie commands to test this step's endpoints]
 
     learner_feedback: |
       [Common issues encountered and solutions]
@@ -144,298 +217,284 @@ steps:
 
 ## Step Definitions
 
-### Step 1: Project Setup & First Output
+### Step 1: Project Setup & Basic API Structure (Backend)
 **Starting Code**: Empty directory
-**Ending Code**: Basic project with "Hello World" output
+**Ending Code**: Basic API with health check endpoint
 
 <lesson>
 #### Why This Step Matters
-Every application starts with a foundation. We're building the minimal structure needed to see something work.
+Every backend starts with a foundation. We're building the minimal API structure needed to verify our server works.
 
 #### What You'll Build
 1. Project directory structure
-2. Package.json with basic configuration
-3. Entry point file
-4. First visible output
+2. Virtual environment setup
+3. Basic FastAPI/Express application
+4. Health check endpoint
 
 #### Implementation Guide
 [Detailed step-by-step instructions with explanations]
 
-#### Understanding the Code
-[Concept explanations]
-
-#### Common Issues & Solutions
-[Troubleshooting guide]
-
-#### Testing This Step
-
-**Automated Test Execution with Playwright MCP:**
-```javascript
-// Executed via Playwright MCP server
-// Step 1: Navigate to application
-await browser_navigate({ url: "http://localhost:3000" });
-
-// Step 2: Take initial snapshot
-await browser_snapshot();
-
-// Step 3: Verify "Hello World" appears
-await browser_wait_for({ text: "Hello World" });
-
-// Step 4: Take screenshot for documentation
-await browser_take_screenshot({
-  filename: "step-001-complete.png",
-  fullPage: true
-});
-
-// Step 5: Verify console output
-const output = await Bash({ command: "npm start" });
-expect(output).toContain("Hello World");
-```
-
-**Manual Verification:**
+#### API Testing Commands
 ```bash
-npm start
-# Should see "Hello World" in terminal
+# Test health endpoint
+curl http://localhost:8000/health
+
+# Expected response:
+# {"status": "healthy", "timestamp": "..."}
+
+# Alternative with httpie:
+http GET localhost:8000/health
 ```
+
+#### Files Changed in This Step
+```yaml
+files_changed:
+  created:
+    - app/main.py
+    - app/__init__.py
+    - requirements.txt
+    - .env.example
+  modified: []
+  deleted: []
+```
+
+#### Context for Next Step
+- Server running on port 8000
+- Basic project structure established
+- Ready to add database models
+
+#### Before Moving to Step 2
+1. Verify all tests pass
+2. Update TEACHING-PLAN.md status
+3. Document any discoveries
+4. Execute `/clear` command
+5. Load Step 2 context
 </lesson>
 
 ### Steps 2-10
-[Similar structure for each step]
+[Similar structure for each step with backend/frontend specific content]
 
-## Architecture Decisions Log
+## Files Change Tracking
 
 ```yaml
-decisions:
-  - decision_id: "DEC-001"
-    step: 3
-    choice: "Use functional components over class components"
-    reasoning: "Simpler mental model for beginners, industry standard"
-    impact: "All components will use hooks pattern"
-    alternatives_considered: ["Class components", "Mixed approach"]
+# FILES_CHANGED.yaml
+# Living document tracking all file modifications
+
+step_001:
+  created:
+    - app/main.py: "Entry point for FastAPI application"
+    - app/__init__.py: "Package initializer"
+    - requirements.txt: "Python dependencies"
+  modified: []
+  deleted: []
+
+step_002:
+  created:
+    - app/models.py: "SQLAlchemy models"
+    - app/database.py: "Database connection"
+  modified:
+    - app/main.py: "Added database initialization"
+  deleted: []
+
+# Continue for all steps...
 ```
 
-## Playwright MCP Testing Workflow
+## Backend API Testing Framework
 
-### After Each Step Implementation
-
-```javascript
-// LIVE TESTING WITH PLAYWRIGHT MCP SERVER
-
-// 1. Start the application
-await Bash({ command: "npm start", run_in_background: true });
-
-// 2. Wait for server to be ready
-await Bash({ command: "sleep 3" });
-
-// 3. Open browser and navigate
-await browser_navigate({ url: "http://localhost:3000" });
-
-// 4. Take accessibility snapshot
-const snapshot = await browser_snapshot();
-console.log("Current page state:", snapshot);
-
-// 5. Test new functionality
-// Example for Step 3 (React components):
-await browser_wait_for({ text: "Welcome" });
-await browser_click({
-  element: "Navigation menu button",
-  ref: "button[aria-label='menu']"
-});
-
-// 6. Verify previous features still work
-await browser_navigate({ url: "http://localhost:3000/about" });
-await browser_wait_for({ text: "About Us" });
-
-// 7. Test interactions
-await browser_fill_form({
-  fields: [
-    {
-      name: "Username field",
-      ref: "input[name='username']",
-      type: "textbox",
-      value: "testuser"
-    }
-  ]
-});
-
-// 8. Capture screenshots for documentation
-await browser_take_screenshot({
-  filename: `step-${stepNumber}-complete.png`,
-  fullPage: true
-});
-
-// 9. Test responsive design
-await browser_resize({ width: 375, height: 667 }); // Mobile
-await browser_take_screenshot({ filename: `step-${stepNumber}-mobile.png` });
-
-await browser_resize({ width: 1920, height: 1080 }); // Desktop
-await browser_take_screenshot({ filename: `step-${stepNumber}-desktop.png` });
-
-// 10. Close browser and stop server
-await browser_close();
-await KillShell({ shell_id: "npm_start_shell" });
-```
-
-### Regression Testing
-
-```javascript
-// Run after EVERY step to ensure nothing broke
-async function runRegressionTests(upToStep) {
-  for (let step = 1; step <= upToStep; step++) {
-    console.log(`Testing Step ${step} functionality...`);
-
-    // Navigate to step-specific features
-    await browser_navigate({ url: `http://localhost:3000/step${step}` });
-
-    // Verify step still works
-    const snapshot = await browser_snapshot();
-
-    // Check for expected elements
-    await browser_wait_for({
-      text: `Step ${step} Complete`,
-      time: 5
-    });
-
-    // Take comparison screenshot
-    await browser_take_screenshot({
-      filename: `regression-step-${step}.png`
-    });
-  }
-}
-```
-
-## Commands Reference
+### Testing Protocol for Backend Steps (1-5)
 
 ```bash
-# Development
-npm start
-npm test
-npm run build
+# Step 1: Health Check
+curl http://localhost:8000/health
 
-# Testing with Playwright MCP
-# (Executed through Claude Code, not terminal)
-browser_navigate({ url: "http://localhost:3000" })
-browser_snapshot()
-browser_click({ element: "button", ref: "#submit" })
-browser_take_screenshot({ filename: "test.png" })
+# Step 2: Database Connection
+python -c "from app.database import test_connection; test_connection()"
 
-# Git Workflow
-git checkout -b step-{number}
-git add .
-git commit -m "STEP-{number}: {description}"
-git push origin step-{number}
+# Step 3: CRUD Operations
+# Create
+curl -X POST http://localhost:8000/api/items \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Test Item", "description": "Test"}'
+
+# Read
+curl http://localhost:8000/api/items
+
+# Update
+curl -X PUT http://localhost:8000/api/items/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Updated Item"}'
+
+# Delete
+curl -X DELETE http://localhost:8000/api/items/1
+
+# Step 4: Authentication
+# Register
+curl -X POST http://localhost:8000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "password": "secure123"}'
+
+# Login
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "password": "secure123"}'
+
+# Protected endpoint
+curl http://localhost:8000/api/protected \
+  -H "Authorization: Bearer <token>"
+
+# Step 5: Advanced Features
+# File upload
+curl -X POST http://localhost:8000/api/upload \
+  -F "file=@test.pdf"
+
+# External API integration
+curl http://localhost:8000/api/external/weather?city=London
 ```
+
+## Frontend Testing Framework (Steps 6-10)
+
+### Playwright MCP Testing Protocol
+
+```javascript
+// Only used for frontend steps (6-10)
+
+// Step 6: Frontend Setup
+await browser_navigate({ url: "http://localhost:3000" });
+await browser_wait_for({ text: "Welcome" });
+
+// Step 7: API Integration
+await browser_fill_form({
+  fields: [{
+    name: "API URL",
+    ref: "input[name='apiUrl']",
+    type: "textbox",
+    value: "http://localhost:8000"
+  }]
+});
+
+// Continue for remaining frontend steps...
+```
+
+## Context Management Best Practices
+
+### What Goes in CLAUDE.md (Persistent Context)
+- Critical architectural decisions
+- Testing protocols
+- Common issue resolutions
+- Project-specific conventions
+- Update protocols
+
+### What Goes in TEACHING-PLAN.md (Living Document)
+- Current progress status
+- Step definitions and objectives
+- File change history
+- Implementation notes
+- Next step context
+
+### Context Clearing Workflow
+```
+Step N Complete → Update Docs → `/clear` → Load Step N+1 Context
+```
+
+## Emergency Recovery
+If something breaks:
+1. Check FILES_CHANGED.yaml for recent modifications
+2. Verify step_{n-1} end code
+3. Check implementation_notes for known issues
+4. Clear context and reload with specific step focus
 
 ## Continuous Update Protocol
 After EVERY step completion:
 1. Update step YAML status
-2. Add implementation_notes with discoveries
-3. Document any learner_feedback
-4. Verify all previous steps still work
-5. Commit changes with message: "STEP-{id}: {description}"
-
-## Emergency Recovery
-If something breaks:
-1. Check step_{n-1} end code
-2. Verify environment variables
-3. Clear cache and reinstall dependencies
-4. Refer to implementation_notes for context
+2. Update FILES_CHANGED.yaml
+3. Add implementation_notes with discoveries
+4. Test at appropriate layer (API for backend, UI for frontend)
+5. Clear context with `/clear` before next step
+6. Commit changes with message: "STEP-{id}: {description}"
 
 ## Project Standards
 
 ### Code Style
-- Use 2 spaces for indentation
-- Use meaningful variable names
+- Use consistent indentation
+- Follow framework conventions
 - Comment complex logic
-- Keep functions under 20 lines
+- Keep functions focused
 
-### File Organization
-```
-src/
-├── components/
-├── services/
-├── utils/
-├── styles/
-└── tests/
-```
+### Testing Standards
+- Backend: Test APIs as external consumers would
+- Frontend: Test UI as users would interact
+- No mocks for teaching - real implementations only
 
-### Naming Conventions
-- Components: PascalCase
-- Functions: camelCase
-- Constants: UPPER_SNAKE_CASE
-- CSS classes: kebab-case
+### Documentation Standards
+- Every file change must be documented
+- Every discovery must be noted
+- Every issue must have a resolution
 
 </teaching-plan-structure>
 
 <output-structure>
 ```
 .claude-project-management/
-├── TEACHING-PLAN.md          # Master plan with live status
+├── TEACHING-PLAN.md          # Master plan with live status (ALL STEPS DEFINED)
 ├── TEACHING-CONTEXT.yaml     # Codebase analysis and progress
+├── FILES_CHANGED.yaml        # Complete file modification history
 ├── PROJECT-README.md         # Complete project documentation
 ├── steps/
 │   ├── step-001/
 │   │   ├── start-code/       # Complete starting point
 │   │   ├── end-code/         # Complete ending point
 │   │   ├── lesson.md         # Detailed teaching content
+│   │   ├── api-tests.md      # API test commands (backend steps)
 │   │   └── changes.diff      # What changed in this step
-│   └── [steps 2-10...]
+│   └── [steps 2-10...]/
 ├── testing-framework/
-│   ├── playwright-teaching.config.js
-│   └── tests/
-│       └── teaching-steps/
-│           └── [test files...]
+│   ├── backend-tests/        # API test scripts
+│   └── frontend-tests/       # Playwright test scripts
 └── progress-reports/
     └── [timestamp]-status.yaml
 ```
 </output-structure>
 
 <validation-rules>
-Before marking ANY step complete - LIVE VERIFICATION:
-☐ Previous step's end-code works perfectly (tested with browser_navigate)
-☐ New functionality works as specified (verified with browser_snapshot)
-☐ All previous features still functional (regression test with browser_wait_for)
-☐ UI elements are accessible (checked with browser_snapshot)
-☐ Forms work correctly (tested with browser_fill_form)
-☐ Navigation works (verified with browser_click and browser_navigate)
-☐ Screenshots captured for documentation (browser_take_screenshot)
-☐ Mobile/desktop responsive (tested with browser_resize)
-☐ Console has no errors (checked with browser_console_messages)
+Before marking ANY step complete:
+☐ Previous step's end-code works perfectly
+☐ For backend: All API endpoints tested with curl/httpie
+☐ For frontend: UI tested with Playwright MCP
+☐ FILES_CHANGED.yaml updated with all modifications
+☐ Implementation notes document critical context
 ☐ YAML status reflects current state
+☐ Context ready to be cleared
 ☐ Junior developer could continue from this point
 </validation-rules>
 
 <critical-reminders>
+- TEACHING-PLAN.md must show ALL 10 STEPS from the start
+- Backend MUST be complete and tested before frontend
+- Clear context with `/clear` after EACH step
+- Document EVERY file change for next-step context
 - This is a LIVING DOCUMENT - update continuously
-- Never skip pre-implementation checks
-- Document EVERYTHING a future developer needs
-- Test external behavior, not implementation details
-- Keep the application working after EVERY change
-- The plan is the single source of truth
-- Update after EVERY task completion
-- New developer should continue using ONLY codebase and documentation
+- Test at the appropriate layer (API vs UI)
+- The plan + codebase = complete learning resource
 </critical-reminders>
 
 <execution-notes>
 - Use <thinking> tags to plan analysis approach
-- Verify each step produces working code
-- Include helpful comments in all code
-- Explain the "why" not just the "how"
-- Anticipate common beginner mistakes
-- Provide clear error messages and debugging tips
-- Keep technical jargon to minimum
-- Use progressive disclosure of complexity
+- Complete backend API before any frontend work
+- Test APIs as the external world would use them
+- Document file changes immediately after making them
+- Clear context to maintain focus and performance
+- Update status in real-time, not batch updates
 </execution-notes>
 
 <output-checklist>
-☐ All project features identified and documented
-☐ 10 progressive steps defined with clear boundaries
-☐ Each step has complete start and end code
-☐ Lessons explain concepts for absolute beginners
-☐ Playwright tests provided for each step
+☐ ALL 10 steps defined upfront in TEACHING-PLAN.md
+☐ Backend completed and tested first (for fullstack)
+☐ FILES_CHANGED.yaml tracking all modifications
+☐ Context clearing protocol documented
+☐ API test commands provided for backend steps
+☐ Playwright tests provided for frontend steps
 ☐ YAML tracking structure in place
 ☐ Living documentation approach implemented
 ☐ Junior developer can execute independently
-☐ Architecture decisions documented with reasoning
 ☐ Emergency recovery procedures included
 </output-checklist>
